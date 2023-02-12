@@ -11,6 +11,18 @@ export const routes = [
     handler: (req, res) => {
       const { title, description } = req.body
 
+      if (!title) {
+        return res.writeHead(400).end(
+          JSON.stringify({ message: 'title is required' }),
+        )
+      }
+
+      if (!description) {
+        return res.writeHead(400).end(
+          JSON.stringify({ message: 'title is required' }),
+        )
+      }
+
       const task = {
         id: randomUUID(),
         title,
@@ -40,6 +52,24 @@ export const routes = [
     handler: (req, res) => {
       const { id } = req.params
       const { title, description } = req.body
+      
+      const [task] = database.select('tasks', { id })
+
+      if (!task) {
+        return res.writeHead(404).end()
+      }
+
+      if (!title) {
+        return res.writeHead(400).end(
+          JSON.stringify({ message: 'title is required' }),
+        )
+      }
+
+      if (!description) {
+        return res.writeHead(400).end(
+          JSON.stringify({ message: 'title is required' }),
+        )
+      }
       database.update('tasks', id, {
         title,
         description,
@@ -54,6 +84,13 @@ export const routes = [
     path: buildRoutePath('/tasks/:id'),
     handler: (req, res) => {
       const { id } = req.params
+
+      const [task] = database.select('tasks', { id })
+
+      if (!task) {
+        return res.writeHead(404).end()
+      }
+
       database.delete('tasks', id)
 
       return res.writeHead(204).end()
@@ -64,6 +101,12 @@ export const routes = [
     path: buildRoutePath('/tasks/:id/complete'),
     handler: (req, res) => {
       const { id } = req.params
+
+      const [task] = database.select('tasks', { id })
+
+      if (!task) {
+        return res.writeHead(404).end()
+      }
       database.updateItemRow('tasks', id, {
         completed_at: new Date(),
         updated_at: new Date()

@@ -72,4 +72,13 @@ export const routes = [
       return res.writeHead(204).end()
     }
   },
+  {
+    method: 'POST',
+    path: buildRoutePath('/teste'),
+    handler: (req, res) => {
+      console.log('teste')
+      
+      return res.writeHead(204).end()
+    }
+  },
 ]
